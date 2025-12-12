@@ -20,6 +20,7 @@ A comprehensive collection of AWS CLI commands for daily DevOps and cloud operat
 - [RDS - Relational Database Service](#rds---relational-database-service)
 - [S3 - Simple Storage Service](#s3---simple-storage-service)
 - [Lambda](#lambda)
+- [Secret Manager](#secret-manager)
 - [CloudWatch](#cloudwatch)
 - [VPC - Virtual Private Cloud](#vpc---virtual-private-cloud)
 - [Other Useful Commands](#other-useful-commands)
@@ -380,6 +381,43 @@ aws s3 presign s3://mys3bucket/dnsrecords.txt --expires-in 60
 | `aws lambda update-function-code --function-name <name> --zip-file fileb://function.zip` | Update function code |
 
 ---
+
+## 🔐 Secrets Manager
+
+### Secret Operations
+| Command | Description |
+|---------|-------------|
+| `aws secretsmanager list-secrets` | List all secrets |
+| `aws secretsmanager describe-secret --secret-id <name>` | Get secret details |
+| `aws secretsmanager get-secret-value --secret-id <name>` | Retrieve secret value |
+| `aws secretsmanager create-secret --name <name> --secret-string <value>` | Create a new secret |
+| `aws secretsmanager create-secret --name <name> --secret-string file://secret.json` | Create secret from file |
+| `aws secretsmanager update-secret --secret-id <name> --secret-string <value>` | Update secret value |
+| `aws secretsmanager put-secret-value --secret-id <name> --secret-string <value>` | Put new secret value |
+
+### Secret Deletion
+| Command | Description |
+|---------|-------------|
+| `aws secretsmanager delete-secret --secret-id <name>` | Delete secret (30-day recovery window) |
+| `aws secretsmanager delete-secret --secret-id <name> --recovery-window-in-days <days>` | Delete secret with custom recovery window (7-30 days) |
+| `aws secretsmanager delete-secret --secret-id <name> --force-delete-without-recovery` | Delete secret immediately (no recovery) |
+| `aws secretsmanager restore-secret --secret-id <name>` | Restore deleted secret within recovery window |
+| `aws secretsmanager list-secrets --filters Key=deleted,Values=true` | List secrets marked for deletion |
+
+### Secret Rotation
+| Command | Description |
+|---------|-------------|
+| `aws secretsmanager rotate-secret --secret-id <name>` | Rotate secret immediately |
+| `aws secretsmanager cancel-rotate-secret --secret-id <name>` | Cancel secret rotation |
+
+**Example:**
+```bash
+# Create a database password secret
+aws secretsmanager create-secret --name prod/db/password --secret-string "MySecurePassword123"
+
+# Delete secret immediately (use with caution!)
+aws secretsmanager delete-secret --secret-id prod/api-key --force-delete-without-recovery
+```
 
 ## 📊 CloudWatch
 
