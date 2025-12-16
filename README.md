@@ -229,6 +229,24 @@ aws sts get-caller-identity
 | `aws ec2 reboot-instances --instance-ids <id>` | Reboot an instance |
 | `aws ec2 terminate-instances --instance-ids <id>` | Terminate an instance |
 
+## EBS - Elastic Block Store
+
+### Volumes
+| Command | Description |
+|---------|-------------|
+| `aws ec2 describe-volumes` | List all volumes |
+| `aws ec2 create-volume --size <size> --availability-zone <zone>` | Create a volume |
+| `aws ec2 delete-volume --volume-id <id>` | Delete a volume |
+
+### Check Encrypted Volumes by tag
+
+```bash
+  aws ec2 describe-volumes \
+  --filters "Name=tag:AppName,Values=myapp" \
+  --query "Volumes[*].{VolumeName:Tags[?Key=='Name']|[0].Value,VolumeId:VolumeId,Encrypted:Encrypted,KmsKeyId:KmsKeyId}" \
+  --output table
+```
+
 ### Key Pairs
 | Command | Description |
 |---------|-------------|
