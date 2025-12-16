@@ -5,6 +5,7 @@ Quick reference for AWS CLI commands I use regularly.
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [EC2](#ec2)
+- [EBS](#EBS - Elastic Block Store)
 - [S3](#s3)
 - [IAM](#iam)
 - [Lambda](#lambda)
@@ -39,6 +40,17 @@ aws ec2 stop-instances --instance-ids i-1234567890abcdef0
 
 # Start instance
 aws ec2 start-instances --instance-ids i-1234567890abcdef0
+```
+
+## EBS - Elastic Block Store
+
+### Check if Volume is Encrypted - by tag
+
+```bash
+  aws ec2 describe-volumes \
+  --filters "Name=tag:AppName,Values=myapp" \
+  --query "Volumes[*].{VolumeName:Tags[?Key=='Name']|[0].Value,VolumeId:VolumeId,Encrypted:Encrypted,KmsKeyId:KmsKeyId}" \
+  --output table
 ```
 
 ## S3
